@@ -23,8 +23,13 @@
 namespace mlir {
 namespace lsp {
 struct Diagnostic;
+struct Position;
+struct Location;
 struct TextDocumentContentChangeEvent;
+struct Range;
+struct InlayHint;
 class URIForFile;
+struct Hover;
 } // namespace lsp
 } // namespace mlir
 
@@ -35,6 +40,7 @@ using TextDocumentContentChangeEvent =
     mlir::lsp::TextDocumentContentChangeEvent;
 using URIForFile = mlir::lsp::URIForFile;
 using Diagnostic = mlir::lsp::Diagnostic;
+struct VerilogUserProvidedInlayHint;
 
 /// This class implements all of the Verilog related functionality necessary for
 /// a language server. This class allows for keeping the Verilog specific logic
@@ -59,6 +65,25 @@ public:
   /// document, or std::nullopt if the uri did not have a corresponding document
   /// within the server.
   std::optional<int64_t> removeDocument(const URIForFile &uri);
+
+  /// Return the locations of the object pointed at by the given position.
+  void getLocationsOf(const URIForFile &uri, const mlir::lsp::Position &defPos,
+                      std::vector<mlir::lsp::Location> &locations);
+
+  /// Find all references of the object pointed at by the given position.
+  void findReferencesOf(const URIForFile &uri, const mlir::lsp::Position &pos,
+                        std::vector<mlir::lsp::Location> &references);
+
+  /// Get the inlay hints for the range within the given file.
+  void getInlayHints(const URIForFile &uri, const mlir::lsp::Range &range,
+                     std::vector<mlir::lsp::InlayHint> &inlayHints);
+
+  void putInlayHintsOnObjects(
+      const std::vector<circt::lsp::VerilogUserProvidedInlayHint> &params);
+
+  /// Get the hover information for the given position.
+  std::optional<mlir::lsp::Hover> findHover(const URIForFile &uri,
+                                            const mlir::lsp::Position &pos);
 
 private:
   struct Impl;

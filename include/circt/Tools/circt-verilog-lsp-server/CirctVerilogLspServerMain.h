@@ -33,10 +33,19 @@ class JSONTransport;
 namespace circt {
 namespace lsp {
 struct VerilogServerOptions {
-  VerilogServerOptions(const std::vector<std::string> &libDirs)
-      : libDirs(libDirs) {}
+  VerilogServerOptions(const std::vector<std::string> &libDirs,
+                       const std::vector<std::string> &extraSourceLocationDirs,
+                       int32_t hoverContextLineCount)
+      : libDirs(libDirs), extraSourceLocationDirs(extraSourceLocationDirs),
+        hoverContextLineCount(hoverContextLineCount) {}
   /// Additional list of RTL directories to search.
   const std::vector<std::string> &libDirs;
+
+  /// Additional list of external source directories to search.
+  const std::vector<std::string> &extraSourceLocationDirs;
+
+  /// Number of lines to include in the hover documentation.
+  const int32_t hoverContextLineCount;
 };
 // namespace lsp
 
