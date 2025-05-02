@@ -1297,6 +1297,9 @@ StringRef VerilogDocument::getSourceLine(slang::SourceLocation loc) {
   auto offest = loc.offset();
   // Find line boundaries around the location
   auto start = text.find_last_of('\n', offest);
+  if (start == text.npos) {
+    start = 0;
+  }
   auto end = text.find_first_of('\n', offest);
   return StringRef(text.substr(start, end - start)).trim();
 }
